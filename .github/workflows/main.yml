@@ -1,0 +1,58 @@
+name: Continuous RDP Workflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+  setup:
+    name: Setup and Initial Execution
+    runs-on: windows-latest
+    steps:
+      - name: Downloading & Installing Essentials
+        run: |
+          Invoke-WebRequest -Uri "https://gitlab.com/chamod12/lm_win-10_github_rdp/-/raw/main/Downloads.bat" -OutFile "Downloads.bat"
+          cmd /c Downloads.bat
+
+      - name: Connect to RDP
+        run: |
+          Invoke-WebRequest -Uri "https://gitlab.com/chamod12/lm_win-10_github_rdp/-/raw/main/show.bat" -OutFile "show.bat"
+          cmd /c show.bat
+
+      - name: Execute Time Counter
+        run: |
+          Invoke-WebRequest -Uri "https://gitlab.com/chamod12/lm_win-10_github_rdp/-/raw/main/loop.bat" -OutFile "loop.bat"
+          cmd /c loop.bat
+
+  resume:
+    name: Resume Workflow
+    runs-on: windows-latest
+    needs: setup
+    timeout-minutes: 360  # 6 hours
+    steps:
+      - name: Check and Resume
+        run: |
+          Invoke-WebRequest -Uri "https://gitlab.com/chamod12/lm_win-10_github_rdp/-/raw/main/loop.bat" -OutFile "loop.bat"
+          cmd /c loop.bat
+
+  continue:
+    name: Continue Workflow
+    runs-on: windows-latest
+    needs: resume
+    timeout-minutes: 360  # 6 hours
+    steps:
+      - name: Continue Execution
+        run: |
+          Invoke-WebRequest -Uri "https://gitlab.com/chamod12/lm_win-10_github_rdp/-/raw/main/loop.bat" -OutFile "loop.bat"
+          cmd /c loop.bat
+
+  final:
+    name: Final Execution
+    runs-on: windows-latest
+    needs: continue
+    timeout-minutes: 360  # 6 hours
+    steps:
+      - name: Final Execution
+        run: |
+          Invoke-WebRequest -Uri "https://gitlab.com/chamod12/lm_win-10_github_rdp/-/raw/main/loop.bat" -OutFile "loop.bat"
+          cmd /c loop.bat
+￼Enter
